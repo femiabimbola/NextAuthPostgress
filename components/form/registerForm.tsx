@@ -45,7 +45,6 @@ const SignUpForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
-    const router = useRouter()
     const response = await fetch('/api/user', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -59,7 +58,7 @@ const SignUpForm = () => {
     if (response.ok) {
       router.push('/login')
     } else {
-      throw new Error('Registration failed')
+      console.log('Registration failed')
     }
   }
 
