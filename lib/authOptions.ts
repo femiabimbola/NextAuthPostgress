@@ -11,6 +11,8 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: PrismaAdapter(db),
   // The session is not compulsory
+  secret: process.env.NEXTAUTH_SECRET,
+
   session: {
     strategy: 'jwt',
   },
@@ -21,14 +23,15 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         email: { label: 'Email', type: 'text', placeholder: '' },
         password: { label: 'Password', type: "password" },
-        username: { label: "Username", type: 'text', placeholder: 'Enter a username' },
+        // username: { label: "Username", type: 'text', placeholder: 'Enter a username' },
       },
       //  The login logic
       async authorize(credentials) {
 
         // Check to see if email or password is typed 
         if (!credentials?.email || !credentials?.password) {
-          throw new Error('missing field')
+          // throw new Error('missing field')
+          console.log('missing field')
         }
 
         // Check to see if user exists
@@ -37,16 +40,18 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!user || !user?.password) {
-          throw new Error(' No user found')
+          console.log('no user')
+          // throw new Error(' No user found')
         }
-
         //  Check if the password matches 
-        const passwordMatch = await compare(credentials.password, user.password)
+        const passwordMatch = await compare(credentials?.password, user?.password)
 
         // if password does not match
         if (!passwordMatch) throw new Error('incorrect password')
 
-        return { user, id: `${user.id}` };
+        console.log(`id: ${user?.id}, username: ${user?.username}, email: ${user?.email}`)
+
+        return { id: `${user?.id}`, username: user?.username, email: user?.email };
       }
     }),
   ],
