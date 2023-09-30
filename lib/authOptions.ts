@@ -51,12 +51,13 @@ export const authOptions: NextAuthOptions = {
 
         console.log(`id: ${user?.id}, username: ${user?.username}, email: ${user?.email}`)
 
-        return { id: `${user?.id}`, username: user?.username, email: user?.email };
+        return { id: user?.id, username: user?.username, email: user?.email };
       }
     }),
   ],
 
   callbacks: {
+    // without next-auth.d.ts
     async jwt({ token, user }) {
       if (user) return { ...token, username: user.username }
       return token
