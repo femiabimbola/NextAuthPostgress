@@ -1,8 +1,9 @@
-import { NextAuthOptions } from 'next-auth';
+import { NextAuthOptions, getServerSession } from 'next-auth';
 import CredentialsProvider from "next-auth/providers/credentials";
 import { db } from "@/lib/prismadb";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { compare } from 'bcrypt';
+
 
 
 export const authOptions: NextAuthOptions = {
@@ -67,5 +68,11 @@ export const authOptions: NextAuthOptions = {
       return { ...session, user: { ...session.user, username: token.username } }
     }
   }
+}
+
+export async function getCurrentUser() {
+  const session = await getServerSession(authOptions)
+  // Treat the getServerSession as a type of sessioninterface
+  return session;
 }
 
